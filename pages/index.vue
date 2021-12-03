@@ -1,77 +1,153 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
-      </v-card>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+  <div>
+    <div class="ma-15" style="padding-top: 8%">
+      <div class="text-h2 text-center letter-spacing-10">
+        ChainScore in now live on Harmony Testnet
+      </div>
+    </div>
+
+    <div class="ma-15">
+      <div
+        v-if="accounts.length > 0"
+        class="d-flex justify-center align-bottom"
+        style="margin: 5% 20%"
+      >
+        <v-text-field
+          v-model="address"
+          label="Address (0x)"
+          outlined
+          rounded
+          color="yellow darken-1"
+        >
+        </v-text-field>
+
+        <v-btn
+          dark
+          class="mx-2"
+          fab
+          elevation="0"
+          color="yellow darken-1"
+          @click="requestScore()"
+        >
+          <v-icon> mdi-flash </v-icon>
+        </v-btn>
+      </div>
+
+      <div v-else class="text-center">
+        <v-btn
+          class="px-10"
+          rounded
+          x-large
+          color="yellow darken-1"
+          @click="connect()"
+          >Connect</v-btn
+        >
+
+        <div v-if="error == 'Metamask not installed'">
+          <div class="my-5 text-body-1">
+            Metamask not installed. Please install it at https://metamask.io/
           </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+        </div>
+      </div>
+    </div>
+
+    <div class="ma-15" style="padding: 10%">
+      <div class="d-flex align-center justify-space-around">
+        <div class="text-h4">Overall Score</div>
+        <div class="text-h2 mx-15">{{score}}</div>
+      </div>
+
+      <div class="d-flex align-center my-15 justify-space-around">
+        <div class="text-h5">Valuation Score</div>
+        <div class="text-h4 mx-15">{{score}}</div>
+      </div>
+
+      <div class="d-flex align-center my-15 justify-space-around">
+        <div class="text-h5">Debt Score</div>
+        <div class="text-h4 mx-15">{{score}}</div>
+      </div>
+
+      <div class="d-flex align-center my-15 justify-space-around">
+        <div class="text-h5">Repayment Score</div>
+        <div class="text-h4 mx-15">{{score}}</div>
+      </div>
+      
+    </div>
+
+    <div></div>
+  </div>
 </template>
+
+<script>
+// const Web3 = require("web3");
+
+export default {
+  components: {
+    // Web3ModalVue,
+  },
+  data() {
+    return {
+      address: '',
+      web3: null,
+      error: null,
+      accounts: [],
+      score: 0
+    }
+  },
+
+  methods: {
+    async connect() {
+      if (this.hasEthereum()) {
+        this.accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        })
+
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x' + (1666700000).toString(16) }],
+          })
+        } catch (switchError) {
+          // This error code indicates that the chain has not been added to MetaMask.
+          if (switchError.code === 4902) {
+            try {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                  {
+                    chainName: 'Harmony Testnet',
+                    chainId: '0x' + (1666700000).toString(16),
+                    rpcUrls: ['https://api.s0.b.hmny.io'],
+                    nativeCurrency: {
+                      name: 'ONE',
+                      symbol: 'ONE',
+                      decimals: 18,
+                    },
+                    blockExplorerUrls: ['https://explorer.pops.one/'],
+                  },
+                ],
+              })
+            } catch (addError) {
+              // handle "add" error
+            }
+          }
+        }
+      } else {
+        this.error = 'Metamask not installed'
+      }
+    },
+    addHarmonyTestnet() {
+      'wallet_addEthereumChain'
+    },
+
+    hasEthereum() {
+      const { ethereum } = window
+      if (ethereum && ethereum.isMetaMask) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
+}
+</script>
