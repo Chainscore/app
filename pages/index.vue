@@ -52,12 +52,12 @@
     <div class="ma-15" style="padding: 1% 8%" v-if="status == 'done'">
       <div class="d-flex align-center mt-15 my-10 justify-space-around">
         <div class="text-h4 font-weight-bold">Overall Score</div>
-        <div class="text-h2 mx-15 font-weight-bold">{{ score * 100 }}</div>
+        <div class="text-h2 mx-15 font-weight-bold">{{ (score.slice(0, 8)) }}</div>
       </div>
 
       <v-progress-linear
         height="20"
-        :value="score * 100"
+        :value="parseInt(score) * 100"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -72,12 +72,12 @@
         "
       >
         <div class="text-h5">Supply Score</div>
-        <div class="text-h4 mx-15">{{ supply_score * 100 }}</div>
+        <div class="text-h4 mx-15">{{ supply_score.slice(0, 8) }}</div>
       </div>
 
       <v-progress-linear
         height="10"
-        :value="supply_score * 100"
+        :value="parseInt(supply_score) * 100"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -85,12 +85,12 @@
         class="d-flex align-center my-10 justify-space-around text--secondary"
       >
         <div class="text-h5">Valuation Score</div>
-        <div class="text-h4 mx-15">{{ value_score * 100 }}</div>
+        <div class="text-h4 mx-15">{{ value_score.slice(0, 8) }}</div>
       </div>
 
       <v-progress-linear
         height="10"
-        :value="value_score * 100"
+        :value="parseInt(value_score) * 100"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -98,12 +98,12 @@
         class="d-flex align-center my-10 justify-space-around text--secondary"
       >
         <div class="text-h5">Debt Score</div>
-        <div class="text-h4 mx-15">{{ debt_score * 100 }}</div>
+        <div class="text-h4 mx-15">{{ debt_score.slice(0, 8) }}</div>
       </div>
 
       <v-progress-linear
         height="10"
-        :value="debt_score * 100"
+        :value="parseInt(debt_score) * 100"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -111,12 +111,12 @@
         class="d-flex align-center my-10 justify-space-around text--secondary"
       >
         <div class="text-h5">Repayment Score</div>
-        <div class="text-h4 mx-15">{{ repayment_score * 100 }}</div>
+        <div class="text-h4 mx-15">{{ repayment_score.slice(0, 8) }}</div>
       </div>
 
       <v-progress-linear
         height="10"
-        :value="repayment_score * 100"
+        :value="parseInt(repayment_score) * 100"
         color="yellow darken-1"
       ></v-progress-linear>
     </div>
@@ -170,14 +170,15 @@ export default {
   data() {
     return {
       address: '',
-      score: 0,
-      supply_score: 0,
-      value_score: 0,
-      repayment_score: 0,
-      debt_score: 0,
+      score: "0",
+      supply_score: "0",
+      value_score: "0",
+      repayment_score: "0",
+      debt_score: "0",
 
       error: null,
       status: 'not_req',
+      tx_status: '',
       accounts: [],
     }
   },
@@ -255,6 +256,9 @@ export default {
     },
     requestScoreFromContract() {
       this.status = 'loading'
+      web3 = new Web3(window.ethereum)
+      this.address = this.address.toLowerCase()
+
       try {
 
         const chainScoreClientContract = new web3.eth.Contract(
@@ -305,11 +309,11 @@ export default {
             web3.utils.soliditySha3({ t: 'string', v: user }) ===
             event.returnValues.user
           ) {
-            this.debt_score = web3.utils.fromWei(event.returnValues.debt_score)
-            this.score = web3.utils.fromWei(event.returnValues.score)
-            this.repayment_score = web3.utils.fromWei(event.returnValues.repayment_score)
-            this.supply_score = web3.utils.fromWei(event.returnValues.supply_score)
-            this.value_score = web3.utils.fromWei(event.returnValues.value_score)
+            this.debt_score = web3.utils.fromWei(event.returnValues.debt_score + "00")
+            this.score = web3.utils.fromWei(event.returnValues.score+ "00")
+            this.repayment_score = web3.utils.fromWei(event.returnValues.repayment_score + "00")
+            this.supply_score = web3.utils.fromWei(event.returnValues.supply_score + "00")
+            this.value_score = web3.utils.fromWei(event.returnValues.value_score + "00")
 
             this.status = 'done'
             console.log(this.status)
