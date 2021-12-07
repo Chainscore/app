@@ -32,7 +32,7 @@
         </v-btn>
       </div>
 
-      <div v-else class="text-center my-10 py-5">
+      <div v-else class="text-center mt-10 pt-5">
         <v-btn
           class="px-10"
           rounded
@@ -48,16 +48,20 @@
           </div>
         </div>
       </div>
+      <div v-if="status == 'errored'" class="text-center text-body-2 red--text">{{ error }}</div>
     </div>
-    <div class="ma-15" style="padding: 1% 8%" v-if="status == 'done'">
+
+    <div v-if="status == 'done'" class="ma-15" style="padding: 1% 8%">
       <div class="d-flex align-center mt-15 my-10 justify-space-around">
         <div class="text-h4 font-weight-bold">Overall Score</div>
-        <div class="text-h2 mx-15 font-weight-bold">{{ (score.slice(0, 8)) }}</div>
+        <div class="text-h2 mx-15 font-weight-bold">
+          {{ score.slice(0, 8) }}
+        </div>
       </div>
 
       <v-progress-linear
         height="20"
-        :value="parseInt(score) * 100"
+        :value="parseInt(score)"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -77,7 +81,7 @@
 
       <v-progress-linear
         height="10"
-        :value="parseInt(supply_score) * 100"
+        :value="parseInt(supply_score)"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -90,7 +94,7 @@
 
       <v-progress-linear
         height="10"
-        :value="parseInt(value_score) * 100"
+        :value="parseInt(value_score)"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -103,7 +107,7 @@
 
       <v-progress-linear
         height="10"
-        :value="parseInt(debt_score) * 100"
+        :value="parseInt(debt_score)"
         color="yellow darken-1"
       ></v-progress-linear>
 
@@ -116,12 +120,12 @@
 
       <v-progress-linear
         height="10"
-        :value="parseInt(repayment_score) * 100"
+        :value="parseInt(repayment_score)"
         color="yellow darken-1"
       ></v-progress-linear>
     </div>
 
-    <div class="d-flex justify-center" v-else-if="status == 'loading'">
+    <div v-else-if="status == 'loading'" class="d-flex justify-center">
       <v-progress-circular
         size="150"
         width="20"
@@ -158,9 +162,7 @@ const options = {
   },
 }
 const ws = new Web3.providers.WebsocketProvider('wss://ws.s0.pops.one', options)
-
 const ChainScoreClientJSON = require('../assets/ChainScoreClient.json')
-
 let web3 = new Web3(window.ethereum)
 
 export default {
@@ -170,15 +172,16 @@ export default {
   data() {
     return {
       address: '',
-      score: "0",
-      supply_score: "0",
-      value_score: "0",
-      repayment_score: "0",
-      debt_score: "0",
+      score: '0',
+      supply_score: '0',
+      value_score: '0',
+      repayment_score: '0',
+      debt_score: '0',
 
       error: null,
       status: 'not_req',
-      tx_status: '',
+      tx_status: 'not_req',
+      tx_id: '',
       accounts: [],
     }
   },
@@ -233,64 +236,48 @@ export default {
         return false
       }
     },
-
-    async requestScore() {
-      this.status = 'loading'
-      try {
-        const resp = await axios.get(
-          `http://169.60.167.178:3001/score/${this.address}`
-        )
-        console.log(resp)
-
-        this.score = resp.data.score.toFixed(2)
-        this.supply_score = resp.data.supply_score.toFixed(2)
-        this.value_score = resp.data.value_score.toFixed(2)
-        this.repayment_score = resp.data.repayment_score.toFixed(2)
-        this.debt_score = resp.data.debt_score.toFixed(2)
-
-        this.status = 'done'
-      } catch (err) {
-        this.status = 'errored'
-        this.error = err
-      }
-    },
+    
     requestScoreFromContract() {
       this.status = 'loading'
-      web3 = new Web3(window.ethereum)
-      this.address = this.address.toLowerCase()
-
-      try {
-
-        const chainScoreClientContract = new web3.eth.Contract(
-          ChainScoreClientJSON.abi,
-          '0x2C0d17281De1f2995C851dbc81875B92f615d558'
-        )
-
-        chainScoreClientContract.methods
-          .requestScore(this.address, '4fc8aa05536c4d16895b731e2e26d380')
-          .send({
-            from: this.accounts[0],
-          })
-          .on('transactionHash', function (hash) {
-            console.log(hash)
-          })
-          .on('receipt', function (receipt) {
-            // receipt example
-            console.log(receipt)
-          })
-          .on('error', (err) => console.log(err))
-        
-        this.listenToResp(this.address);
-
-      } catch (err) {
+      if (!web3.utils.isAddress(this.address)) {
         this.status = 'errored'
-        this.error = err
-        console.log(err)
+        this.error = 'Address not valid'
+      } else {
+        web3 = new Web3(window.ethereum)
+        this.address = this.address.toLowerCase()
+
+        try {
+          const chainScoreClientContract = new web3.eth.Contract(
+            ChainScoreClientJSON.abi,
+            '0x2C0d17281De1f2995C851dbc81875B92f615d558'
+          )
+
+          chainScoreClientContract.methods
+            .requestScore(this.address, '4fc8aa05536c4d16895b731e2e26d380')
+            .send({
+              from: this.accounts[0],
+            })
+            .on('transactionHash', function (hash) {
+              console.log(hash)
+            })
+            .on('receipt', function (receipt) {
+              // receipt example
+              console.log(receipt)
+            })
+            .on('error', (err) =>{
+              this.status = 'errored'
+              this.error = err.message
+            })
+
+          this.listenToResp(this.address)
+        } catch (err) {
+          this.status = 'errored'
+          this.error = err
+          console.log(err)
+        }
       }
     },
-    sendScore() {
 
-    },
     listenToResp(user) {
       web3 = new Web3(ws, options)
 
@@ -309,11 +296,19 @@ export default {
             web3.utils.soliditySha3({ t: 'string', v: user }) ===
             event.returnValues.user
           ) {
-            this.debt_score = web3.utils.fromWei(event.returnValues.debt_score + "00")
-            this.score = web3.utils.fromWei(event.returnValues.score+ "00")
-            this.repayment_score = web3.utils.fromWei(event.returnValues.repayment_score + "00")
-            this.supply_score = web3.utils.fromWei(event.returnValues.supply_score + "00")
-            this.value_score = web3.utils.fromWei(event.returnValues.value_score + "00")
+            this.debt_score = web3.utils.fromWei(
+              event.returnValues.debt_score + '00'
+            )
+            this.score = web3.utils.fromWei(event.returnValues.score + '00')
+            this.repayment_score = web3.utils.fromWei(
+              event.returnValues.repayment_score + '00'
+            )
+            this.supply_score = web3.utils.fromWei(
+              event.returnValues.supply_score + '00'
+            )
+            this.value_score = web3.utils.fromWei(
+              event.returnValues.value_score + '00'
+            )
 
             this.status = 'done'
             console.log(this.status)
@@ -323,6 +318,31 @@ export default {
         .on('error', (error) => {
           console.log(error)
         })
+    },
+    async requestScore() {
+      this.status = 'loading'
+      if (!web3.utils.isAddress(this.address)) {
+        this.status = 'errored'
+        this.error = 'Address not valid'
+      } else {
+        try {
+          const resp = await axios.get(
+            `http://169.60.167.178:3001/score/${this.address}`
+          )
+          console.log(resp)
+
+          this.score = resp.data.score.toFixed(2)
+          this.supply_score = resp.data.supply_score.toFixed(2)
+          this.value_score = resp.data.value_score.toFixed(2)
+          this.repayment_score = resp.data.repayment_score.toFixed(2)
+          this.debt_score = resp.data.debt_score.toFixed(2)
+
+          this.status = 'done'
+        } catch (err) {
+          this.status = 'errored'
+          this.error = err
+        }
+      }
     },
   },
 }
