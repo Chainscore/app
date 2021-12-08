@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="ma-15" style="padding-top: 8%">
+    <div class="mx-15 mt-10" style="padding-top: 8%">
       <div
-        class="text-h1 font-weight-bold text-center letter-spacing-10"
+        class="text-h3 text-md-h1 font-weight-bold text-center letter-spacing-10"
         style="line-height: 1.2"
       >
         ChainScore in now live
@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="ma-15 py-5">
+    <div class="ma-md-15 py-5">
       <div
         v-if="accounts.length > 0"
         class="d-flex justify-center align-bottom"
