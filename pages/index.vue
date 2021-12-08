@@ -249,7 +249,7 @@ export default {
         try {
           const chainScoreClientContract = new web3.eth.Contract(
             ChainScoreClientJSON.abi,
-            '0x2C0d17281De1f2995C851dbc81875B92f615d558'
+            '0x3B1A073335c45A7881a088Ae1454a00EA73aDfC5'
           )
 
           chainScoreClientContract.methods
@@ -283,7 +283,7 @@ export default {
 
       const myContract = new web3.eth.Contract(
         ChainScoreClientJSON.abi,
-        '0x2C0d17281De1f2995C851dbc81875B92f615d558'
+        '0x3B1A073335c45A7881a088Ae1454a00EA73aDfC5'
       )
 
       myContract.events
