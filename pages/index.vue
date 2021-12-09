@@ -256,11 +256,11 @@ export default {
         try {
           const chainScoreClientContract = new web3.eth.Contract(
             ChainScoreClientJSON.abi,
-            process.env.CHAINSCORE_CLIENT
+            "0xA405e8c99E29424f3f320fAED967f2EC8E6700F2"
           )
 
           chainScoreClientContract.methods
-            .requestScore(this.address, process.env.SCORE_MULTIPLE_JOB_SPEC)
+            .requestScore(this.address, "0x6536616537316138336137613436333439313039323037356364326664336538")
             .send({
               from: this.accounts[0],
             })
@@ -295,7 +295,7 @@ export default {
 
       const myContract = new web3.eth.Contract(
         ChainScoreClientJSON.abi,
-        process.env.CHAINSCORE_CLIENT
+        "0xA405e8c99E29424f3f320fAED967f2EC8E6700F2"
       )
 
       myContract.events
