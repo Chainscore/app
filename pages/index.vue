@@ -126,12 +126,16 @@
     </div>
 
     <div v-else-if="status == 'loading'" class="d-flex justify-center">
+      <div>
       <v-progress-circular
         size="150"
-        width="20"
+        width="10"
         color="yellow darken-1"
         indeterminate
-      ></v-progress-circular>
+      > </v-progress-circular>
+    <div class="text-body-2 text-center my-5" style="color: orange">{{tx_status}}</div> 
+      {{tx_id}}
+      </div>
     </div>
 
     <!-- <div class="text-center" v-else>
@@ -239,6 +243,9 @@ export default {
     
     requestScoreFromContract() {
       this.status = 'loading'
+      // this.tx_status = 'Confirming Transaction';
+      this.tx_status = 'Requesting Score';
+
       if (!web3.utils.isAddress(this.address)) {
         this.status = 'errored'
         this.error = 'Address not valid'
@@ -249,20 +256,25 @@ export default {
         try {
           const chainScoreClientContract = new web3.eth.Contract(
             ChainScoreClientJSON.abi,
-            '0x3B1A073335c45A7881a088Ae1454a00EA73aDfC5'
+            process.env.CHAINSCORE_CLIENT
           )
 
           chainScoreClientContract.methods
-            .requestScore(this.address, '4fc8aa05536c4d16895b731e2e26d380')
+            .requestScore(this.address, process.env.SCORE_MULTIPLE_JOB_SPEC)
             .send({
               from: this.accounts[0],
             })
             .on('transactionHash', function (hash) {
-              console.log(hash)
+              this.tx_status = 'Score Request sent!';
+              this.tx_id = hash;
+              console.log(this.tx_status);
             })
             .on('receipt', function (receipt) {
               // receipt example
+              this.tx_status = 'Waiting for score from oracle...';
               console.log(receipt)
+              console.log(this.tx_status);
+
             })
             .on('error', (err) =>{
               this.status = 'errored'
@@ -283,7 +295,7 @@ export default {
 
       const myContract = new web3.eth.Contract(
         ChainScoreClientJSON.abi,
-        '0x3B1A073335c45A7881a088Ae1454a00EA73aDfC5'
+        process.env.CHAINSCORE_CLIENT
       )
 
       myContract.events
@@ -293,8 +305,7 @@ export default {
         })
         .on('data', (event) => {
           if (
-            web3.utils.soliditySha3({ t: 'string', v: user }) ===
-            event.returnValues.user
+            user.toLowerCase() === (event.returnValues.user).toLowerCase()
           ) {
             this.debt_score = web3.utils.fromWei(
               event.returnValues.debt_score + '00'
@@ -311,7 +322,8 @@ export default {
             )
 
             this.status = 'done'
-            console.log(this.status)
+            this.tx_status = 'not_req';
+
             console.log(event)
           }
         })
