@@ -2,7 +2,12 @@
   <div>
     <div class="mx-15 mt-10" style="padding-top: 8%">
       <div
-        class="text-h3 text-md-h1 font-weight-bold text-center letter-spacing-10"
+        class="
+          text-h3 text-md-h1
+          font-weight-bold
+          text-center
+          letter-spacing-10
+        "
         style="line-height: 1.2"
       >
         ChainScore in now live
@@ -48,7 +53,9 @@
           </div>
         </div>
       </div>
-      <div v-if="status == 'errored'" class="text-center text-body-2 red--text">{{ error }}</div>
+      <div v-if="status == 'errored'" class="text-center text-body-2 red--text">
+        {{ error }}
+      </div>
     </div>
 
     <div v-if="status == 'done'" class="ma-15" style="padding: 1% 8%">
@@ -127,14 +134,17 @@
 
     <div v-else-if="status == 'loading'" class="d-flex justify-center">
       <div>
-      <v-progress-circular
-        size="150"
-        width="10"
-        color="yellow darken-1"
-        indeterminate
-      > </v-progress-circular>
-    <div class="text-body-2 text-center my-5" style="color: orange">{{tx_status}}</div> 
-      {{tx_id}}
+        <v-progress-circular
+          size="150"
+          width="10"
+          color="yellow darken-1"
+          indeterminate
+        >
+        </v-progress-circular>
+        <div class="text-body-2 text-center my-5" style="color: orange">
+          {{ tx_status }}
+        </div>
+        {{ tx_id }}
       </div>
     </div>
 
@@ -147,8 +157,8 @@
       <div class="text-body-1 mt-5 ">5. Lo</div>
 
     </div> -->
-
-    <div></div>
+    
+    
   </div>
 </template>
 
@@ -240,11 +250,11 @@ export default {
         return false
       }
     },
-    
+
     requestScoreFromContract() {
       this.status = 'loading'
       // this.tx_status = 'Confirming Transaction';
-      this.tx_status = 'Requesting Score';
+      this.tx_status = 'Requesting Score'
 
       if (!web3.utils.isAddress(this.address)) {
         this.status = 'errored'
@@ -256,27 +266,29 @@ export default {
         try {
           const chainScoreClientContract = new web3.eth.Contract(
             ChainScoreClientJSON.abi,
-            "0xA405e8c99E29424f3f320fAED967f2EC8E6700F2"
+            '0xA405e8c99E29424f3f320fAED967f2EC8E6700F2'
           )
 
           chainScoreClientContract.methods
-            .requestScore(this.address, "0x6536616537316138336137613436333439313039323037356364326664336538")
+            .requestScore(
+              this.address,
+              '0x6536616537316138336137613436333439313039323037356364326664336538'
+            )
             .send({
               from: this.accounts[0],
             })
             .on('transactionHash', function (hash) {
-              this.tx_status = 'Score Request sent!';
-              this.tx_id = hash;
-              console.log(this.tx_status);
+              this.tx_status = 'Score Request sent!'
+              this.tx_id = hash
+              console.log(this.tx_status)
             })
             .on('receipt', function (receipt) {
               // receipt example
-              this.tx_status = 'Waiting for score from oracle...';
+              this.tx_status = 'Waiting for score from oracle...'
               console.log(receipt)
-              console.log(this.tx_status);
-
+              console.log(this.tx_status)
             })
-            .on('error', (err) =>{
+            .on('error', (err) => {
               this.status = 'errored'
               this.error = err.message
             })
@@ -295,7 +307,7 @@ export default {
 
       const myContract = new web3.eth.Contract(
         ChainScoreClientJSON.abi,
-        "0xA405e8c99E29424f3f320fAED967f2EC8E6700F2"
+        '0xA405e8c99E29424f3f320fAED967f2EC8E6700F2'
       )
 
       myContract.events
@@ -304,9 +316,7 @@ export default {
           // fromBlock: 0
         })
         .on('data', (event) => {
-          if (
-            user.toLowerCase() === (event.returnValues.user).toLowerCase()
-          ) {
+          if (user.toLowerCase() === event.returnValues.user.toLowerCase()) {
             this.debt_score = web3.utils.fromWei(
               event.returnValues.debt_score + '00'
             )
@@ -322,7 +332,7 @@ export default {
             )
 
             this.status = 'done'
-            this.tx_status = 'not_req';
+            this.tx_status = 'not_req'
 
             console.log(event)
           }
