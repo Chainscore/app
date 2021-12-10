@@ -52,7 +52,7 @@
     </v-main>
 
     <div
-      class="d-flex flex-column justify-center align-center my-15 pt-15 py-5"
+      class="d-flex flex-column justify-center align-center pb-15 mb-5"
     >
       <div class="text--secondary">Data provided by</div>
       <div class="d-flex flex-wrap justify-center">
@@ -108,7 +108,7 @@
       </div>
 
       <div class="mr-5">
-        <a class="text-decoration-none" href="mailto://hello@chainscore.finance" target="_blank">
+        <a class="text-decoration-none" href="mailto:hello@chainscore.finance" target="_blank">
           hello@chainscore.finance
         </a>
       </div>

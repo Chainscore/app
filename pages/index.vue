@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div v-if="status == 'done'" class="ma-15" style="padding: 1% 8%">
+    <div v-if="status == 'done'" class="pb-10" style="padding: 0% 14%">
       <div class="d-flex align-center mt-15 my-10 justify-space-around">
         <div class="text-h4 font-weight-bold">Overall Score</div>
         <div class="text-h2 mx-15 font-weight-bold">
@@ -147,6 +147,16 @@
         {{ tx_id }}
       </div>
     </div>
+
+    <!-- <v-progress-circular
+      :rotate="180"
+      :size="500"
+      :width="50"
+      :value="20"
+      color="yellow darken-1"
+    >
+      <div class="text-h3">20</div>
+    </v-progress-circular> -->
 
     <!-- <div class="text-center" v-else>
       <div class="text-h4">Instructions</div>
