@@ -18,10 +18,10 @@
     <div class="ma-md-15 py-5">
       <div
         v-if="accounts.length > 0"
-        class="d-flex justify-center align-bottom"
+        class="d-flex justify-center align-bottom text-center"
         style="margin: 5% 20%"
       >
-        <v-text-field v-model="address" label="Address (0x)" outlined rounded>
+        <!-- <v-text-field v-model="address" label="Address (0x)" outlined rounded>
         </v-text-field>
 
         <v-btn
@@ -34,7 +34,11 @@
           @click="requestScoreFromContract()"
         >
           <v-icon> mdi-flash </v-icon>
-        </v-btn>
+        </v-btn> -->
+        <div>
+        <div class="text-h4 orange--text" style="line-height: 1.4">We're sorry, Demo is closed for now!</div>
+        <div class="my-5">Join our <a href="https://discord.gg/TaHXKnrgkb">Discord</a> for updates</div>
+        </div>
       </div>
 
       <div v-else class="text-center mt-10 pt-5">
@@ -146,29 +150,7 @@
         </div>
         {{ tx_id }}
       </div>
-    </div>
-
-    <!-- <v-progress-circular
-      :rotate="180"
-      :size="500"
-      :width="50"
-      :value="20"
-      color="yellow darken-1"
-    >
-      <div class="text-h3">20</div>
-    </v-progress-circular> -->
-
-    <!-- <div class="text-center" v-else>
-      <div class="text-h4">Instructions</div>
-      <div class="text-body-1 mt-10">1. Insert your address</div>
-      <div class="text-body-1 mt-5 ">2. </div>
-      <div class="text-body-1 mt-5 ">3. Lo</div>
-      <div class="text-body-1 mt-5 ">4. Lo</div>
-      <div class="text-body-1 mt-5 ">5. Lo</div>
-
-    </div> -->
-    
-    
+    </div>    
   </div>
 </template>
 
