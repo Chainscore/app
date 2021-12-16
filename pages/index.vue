@@ -57,7 +57,7 @@
           >
             <v-card class="ma-5" flat>
               <div class="d-md-flex">
-                <v-img :src="asset.logo_url" width="120px" contain ></v-img>
+                <v-img :src="asset.logo_url" width="120px" contain></v-img>
                 <div>
                   <v-card-title>{{ asset.contract_name }}</v-card-title>
                   <v-card-subtitle>$ {{ asset.quote }}</v-card-subtitle>
@@ -107,7 +107,7 @@
             </div>
 
             <v-progress-linear
-            class="mt-2"
+              class="mt-2"
               style="border-radius: 100px"
               background-color="yellow darken-1"
               color="success"
@@ -139,7 +139,7 @@
             </div>
 
             <v-progress-linear
-            class="mt-2"
+              class="mt-2"
               style="border-radius: 100px"
               background-color="yellow darken-1"
               color="success"
@@ -301,10 +301,11 @@ export default {
           })
 
         axios
-          .get(`https://api.node0.chainscore.finance/value/total/${this.address}`)
+          .get(
+            `https://api.node0.chainscore.finance/value/total/${this.address}`
+          )
           .then((resp) => {
             this.valuation = resp.data
-            this.loading = false
           })
 
         axios
@@ -313,7 +314,6 @@ export default {
           )
           .then((resp) => {
             this.credit = resp.data
-            this.loading = false
           })
       } catch (err) {
         this.loading = false

@@ -12,11 +12,7 @@
 
       <v-spacer></v-spacer>
 
-      <div
-        v-if="!$vuetify.breakpoint.mobile"
-        class="d-flex flex-wrap justify-space-between"
-      >
-        <div class="mx-5">
+
           <v-btn
             text
             href="https://docs.chainscore.finance"
@@ -25,10 +21,9 @@
             large
             >docs</v-btn
           >
-        </div>
 
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      </div>
+        <v-app-bar-nav-icon class="mr-5" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" absolute bottom temporary right width="330" color="yellow">
