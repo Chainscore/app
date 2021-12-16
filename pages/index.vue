@@ -286,7 +286,7 @@ export default {
 
       try {
         axios
-          .get(`http://169.60.167.178:3001/score/${this.address}`)
+          .get(`https://api.node0.chainscore.finance/score/${this.address}`)
           .then((resp) => {
             this.score = parseFloat(resp.data.score).toFixed(2) * 100
             this.supply_score =
@@ -301,7 +301,7 @@ export default {
           })
 
         axios
-          .get(`http://169.60.167.178:3001/value/total/${this.address}`)
+          .get(`https://api.node0.chainscore.finance/value/total/${this.address}`)
           .then((resp) => {
             this.valuation = resp.data
             this.loading = false
@@ -309,7 +309,7 @@ export default {
 
         axios
           .get(
-            `http://169.60.167.178:3001/credit/getAllPositions/${this.address}`
+            `https://api.node0.chainscore.finance/credit/getAllPositions/${this.address}`
           )
           .then((resp) => {
             this.credit = resp.data
