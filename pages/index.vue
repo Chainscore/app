@@ -285,36 +285,36 @@ export default {
       this.loading = true
 
       try {
-        axios
-          .get(`https://api.node0.chainscore.finance/score/${this.address}`)
-          .then((resp) => {
-            this.score = parseFloat(resp.data.score).toFixed(2) * 100
+        const scoreReq = axios.get(
+          `https://api.node0.chainscore.finance/score/${this.address}`
+        )
+
+        const valueReq = axios.get(
+          `https://api.node0.chainscore.finance/value/total/${this.address}`
+        )
+
+        const creditReq = axios.get(
+          `https://api.node0.chainscore.finance/credit/getAllPositions/${this.address}`
+        )
+
+        axios.all([scoreReq, valueReq, creditReq]).then(
+          axios.spread((...responses) => {
+            this.score = parseFloat(responses[0].data.score).toFixed(2) * 100
             this.supply_score =
-              parseFloat(resp.data.supply_score).toFixed(2) * 100
+              parseFloat(responses[0].data.supply_score).toFixed(2) * 100
             this.value_score =
-              parseFloat(resp.data.value_score).toFixed(2) * 100
+              parseFloat(responses[0].data.value_score).toFixed(2) * 100
             this.repayment_score =
-              parseFloat(resp.data.repayment_score).toFixed(2) * 100
-            this.debt_score = parseFloat(resp.data.debt_score).toFixed(2) * 100
+              parseFloat(responses[0].data.repayment_score).toFixed(2) * 100
+            this.debt_score =
+              parseFloat(responses[0].data.debt_score).toFixed(2) * 100
+
+            this.valuation = responses[1].data
+            this.credit = responses[2].data
 
             this.loading = false
           })
-
-        axios
-          .get(
-            `https://api.node0.chainscore.finance/value/total/${this.address}`
-          )
-          .then((resp) => {
-            this.valuation = resp.data
-          })
-
-        axios
-          .get(
-            `https://api.node0.chainscore.finance/credit/getAllPositions/${this.address}`
-          )
-          .then((resp) => {
-            this.credit = resp.data
-          })
+        )
       } catch (err) {
         this.loading = false
         this.error = err
