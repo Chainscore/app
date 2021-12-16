@@ -1,27 +1,25 @@
 <template>
   <div>
-    <div class="mx-15 mt-10" style="padding-top: 8%">
+    <div class="mx-md-15 mx-5 mt-10 pb-10" style="padding-top: 8%">
       <div
         class="
-          text-h3 text-md-h1
+          text-h2 text-md-h1
           font-weight-bold
           text-center
           letter-spacing-10
         "
         style="line-height: 1.2"
       >
-        ChainScore in now live
-        <div class="font-weight-medium harmony">on Harmony Testnet</div>
+        Credit Data for DeFi
+        <div class="text-h3 font font-weight-medium harmony mt-2">
+          on Harmony Testnet
+        </div>
       </div>
     </div>
 
     <div class="ma-md-15 py-5">
-      <div
-        v-if="accounts.length > 0"
-        class="d-flex justify-center align-bottom text-center"
-        style="margin: 5% 20%"
-      >
-        <!-- <v-text-field v-model="address" label="Address (0x)" outlined rounded>
+      <div class="d-flex justify-center align-bottom text-center mx-5 mx-md-15">
+        <v-text-field v-model="address" label="Address (0x)" outlined rounded>
         </v-text-field>
 
         <v-btn
@@ -30,146 +28,233 @@
           fab
           elevation="0"
           color="yellow darken-1"
-          :disabled="status == 'loading'"
-          @click="requestScoreFromContract()"
+          :disabled="loading"
+          @click="requestData()"
         >
           <v-icon> mdi-flash </v-icon>
-        </v-btn> -->
-        <div>
+        </v-btn>
+        <!-- <div>
         <div class="text-h4 orange--text" style="line-height: 1.4">We're sorry, Demo is closed for now!</div>
         <div class="my-5">Join our <a href="https://discord.gg/TaHXKnrgkb">Discord</a> for updates</div>
+        </div> -->
+      </div>
+    </div>
+
+    <div v-if="!loading" class="pb-10">
+      <!-- Valuation -->
+      <div v-if="valuation">
+        <div class="text-h4 font-weight-bold mx-15 px-10 mb-10">
+          Total Valuation
+          <div class="text-h3 my-4">$ {{ valuation.total.toFixed(2) }}</div>
         </div>
+
+        <!-- <div>Assets</div> -->
+
+        <v-slide-group multiple show-arrows class="mx-md-15">
+          <v-slide-item
+            v-for="asset in valuation.items"
+            :key="asset.contract_address"
+          >
+            <v-card class="ma-5" flat>
+              <div class="d-md-flex">
+                <v-img :src="asset.logo_url" width="120px" contain ></v-img>
+                <div>
+                  <v-card-title>{{ asset.contract_name }}</v-card-title>
+                  <v-card-subtitle>$ {{ asset.quote }}</v-card-subtitle>
+                  <v-card-text>
+                    <div>
+                      Balance:
+                      {{
+                        parseFloat(asset.balance) /
+                        10 ** parseInt(asset.contract_decimals)
+                      }}
+                    </div>
+                    <div>
+                      Contract Address:
+                      <div>{{ asset.contract_address }}</div>
+                    </div>
+                    <div>Price: $ {{ asset.quote_rate }}</div>
+                  </v-card-text>
+                </div>
+              </div>
+            </v-card>
+          </v-slide-item>
+        </v-slide-group>
       </div>
 
-      <div v-else class="text-center mt-10 pt-5">
-        <v-btn
-          class="px-10"
-          rounded
-          x-large
-          color="yellow darken-1"
-          @click="connect()"
-          >Connect</v-btn
-        >
+      <!-- Credit Data -->
+      <div v-if="credit" class="mx-md-15 mx-5 px-10 mb-5 mt-15">
+        <div class="text-h4 font-weight-bold pt-10">Credit Data</div>
 
-        <div v-if="error == 'Metamask not installed'">
-          <div class="my-5 text-body-1">
-            Metamask not installed. Please install it at https://metamask.io/
+        <div class="mt-15 justify-space-around">
+          <div class="text-h4 my-5">
+            Current Debt
+            <div class="text-h3 font-weight-bold">
+              $ {{ credit.current_borrowed.toFixed(2) }}
+            </div>
+          </div>
+          <div class="d-flex flex-wrap justify-space-around">
+            <div class="text-h5 py-10">
+              Total Debt History
+              <div class="text-h4">
+                $ {{ credit.total_borrowed.toFixed(2) }}
+              </div>
+            </div>
+
+            <div class="text-h5 py-10">
+              Total Repaid History
+              <div class="text-h4">$ {{ credit.total_repaid.toFixed(2) }}</div>
+            </div>
+
+            <v-progress-linear
+            class="mt-2"
+              style="border-radius: 100px"
+              background-color="yellow darken-1"
+              color="success"
+              height="50"
+              reverse
+              :value="(credit.total_repaid / credit.total_borrowed) * 100"
+            ></v-progress-linear>
+          </div>
+
+          <div class="text-h4 my-5 mt-15">
+            Current Supplied
+            <div class="text-h3 font-weight-bold my-4 mb-10">
+              $ {{ credit.current_supplied.toFixed(2) }}
+            </div>
+          </div>
+          <div class="d-flex flex-wrap justify-space-around">
+            <div class="text-h5 py-10">
+              Total Supplied History
+              <div class="text-h4">
+                $ {{ credit.total_supplied.toFixed(2) }}
+              </div>
+            </div>
+
+            <div class="text-h5 py-10">
+              Total Redeemed History
+              <div class="text-h4">
+                $ {{ credit.total_redeemed.toFixed(2) }}
+              </div>
+            </div>
+
+            <v-progress-linear
+            class="mt-2"
+              style="border-radius: 100px"
+              background-color="yellow darken-1"
+              color="success"
+              height="50"
+              reverse
+              :value="(credit.total_redeemed / credit.total_supplied) * 100"
+            ></v-progress-linear>
+          </div>
+        </div>
+
+        <v-slide-group multiple show-arrows>
+          <v-slide-item> </v-slide-item>
+        </v-slide-group>
+      </div>
+
+      <!-- Scores -->
+      <div v-if="score != null" class="mx-md-15 mx-5 px-10 mb-5 mt-15">
+        <div class="text-h4 font-weight-bold pt-10">Credit Score</div>
+        <div class="d-flex text-center justify-center ma-5">
+          <div>
+            <div class="text-h4">Overall Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="400"
+              :width="80"
+              :value="score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h3">{{ score }}</div>
+            </v-progress-circular>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap justify-space-around text-center">
+          <div class="ma-5">
+            <div class="text-h5">Supply Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="supply_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ supply_score }}</div>
+            </v-progress-circular>
+          </div>
+          <div class="ma-5">
+            <div class="text-h5">Value Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="value_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ value_score }}</div>
+            </v-progress-circular>
+          </div>
+          <div class="ma-5">
+            <div class="text-h5">Debt Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="debt_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ debt_score }}</div>
+            </v-progress-circular>
+          </div>
+          <div class="ma-5">
+            <div class="text-h5">Repayment Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="repayment_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ repayment_score }}</div>
+            </v-progress-circular>
           </div>
         </div>
       </div>
-      <div v-if="status == 'errored'" class="text-center text-body-2 red--text">
-        {{ error }}
-      </div>
     </div>
 
-    <div v-if="status == 'done'" class="pb-10" style="padding: 0% 14%">
-      <div class="d-flex align-center mt-15 my-10 justify-space-around">
-        <div class="text-h4 font-weight-bold">Overall Score</div>
-        <div class="text-h2 mx-15 font-weight-bold">
-          {{ score.slice(0, 8) }}
-        </div>
-      </div>
-
-      <v-progress-linear
-        height="20"
-        :value="parseInt(score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="
-          d-flex
-          align-center
-          mt-15
-          mb-10
-          justify-space-around
-          text--secondary
-        "
-      >
-        <div class="text-h5">Supply Score</div>
-        <div class="text-h4 mx-15">{{ supply_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(supply_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="d-flex align-center my-10 justify-space-around text--secondary"
-      >
-        <div class="text-h5">Valuation Score</div>
-        <div class="text-h4 mx-15">{{ value_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(value_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="d-flex align-center my-10 justify-space-around text--secondary"
-      >
-        <div class="text-h5">Debt Score</div>
-        <div class="text-h4 mx-15">{{ debt_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(debt_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="d-flex align-center my-10 justify-space-around text--secondary"
-      >
-        <div class="text-h5">Repayment Score</div>
-        <div class="text-h4 mx-15">{{ repayment_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(repayment_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-    </div>
-
-    <div v-else-if="status == 'loading'" class="d-flex justify-center">
+    <div v-else class="d-flex justify-center">
       <div>
         <v-progress-circular
           size="150"
           width="10"
-          color="yellow darken-1"
+          color="yellow darken-2"
           indeterminate
         >
         </v-progress-circular>
         <div class="text-body-2 text-center my-5" style="color: orange">
-          {{ tx_status }}
+          Requesting
         </div>
-        {{ tx_id }}
       </div>
-    </div>    
+      {{ error }}
+    </div>
   </div>
 </template>
 
 <script>
-const Web3 = require('web3')
 const axios = require('axios')
-
-const options = {
-  // Enable auto reconnection
-  reconnect: {
-    auto: true,
-    delay: 5000, // ms
-    maxAttempts: 5,
-    onTimeout: false,
-  },
-}
-const ws = new Web3.providers.WebsocketProvider('wss://ws.s0.pops.one', options)
-const ChainScoreClientJSON = require('../assets/ChainScoreClient.json')
-let web3 = new Web3(window.ethereum)
 
 export default {
   components: {
@@ -178,184 +263,61 @@ export default {
   data() {
     return {
       address: '',
-      score: '0',
-      supply_score: '0',
-      value_score: '0',
-      repayment_score: '0',
-      debt_score: '0',
+      score: null,
+      supply_score: null,
+      value_score: null,
+      repayment_score: null,
+      debt_score: null,
+      valuation: null,
+
+      credit: null,
 
       error: null,
-      status: 'not_req',
-      tx_status: 'not_req',
-      tx_id: '',
-      accounts: [],
+      loading: false,
     }
   },
 
   methods: {
-    async connect() {
-      if (this.hasEthereum()) {
-        this.accounts = await window.ethereum.request({
-          method: 'eth_requestAccounts',
-        })
+    requestData() {
+      this.score = null
+      this.credit = null
+      this.valuation = null
+      this.loading = true
 
-        try {
-          await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x' + (1666700000).toString(16) }],
+      try {
+        axios
+          .get(`http://169.60.167.178:3001/score/${this.address}`)
+          .then((resp) => {
+            this.score = parseFloat(resp.data.score).toFixed(2) * 100
+            this.supply_score =
+              parseFloat(resp.data.supply_score).toFixed(2) * 100
+            this.value_score =
+              parseFloat(resp.data.value_score).toFixed(2) * 100
+            this.repayment_score =
+              parseFloat(resp.data.repayment_score).toFixed(2) * 100
+            this.debt_score = parseFloat(resp.data.debt_score).toFixed(2) * 100
+
+            this.loading = false
           })
-        } catch (switchError) {
-          // This error code indicates that the chain has not been added to MetaMask.
-          if (switchError.code === 4902) {
-            try {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [
-                  {
-                    chainName: 'Harmony Testnet',
-                    chainId: '0x' + (1666700000).toString(16),
-                    rpcUrls: ['https://api.s0.b.hmny.io'],
-                    nativeCurrency: {
-                      name: 'ONE',
-                      symbol: 'ONE',
-                      decimals: 18,
-                    },
-                    blockExplorerUrls: ['https://explorer.pops.one/'],
-                  },
-                ],
-              })
-            } catch (addError) {
-              // handle "add" error
-            }
-          }
-        }
-      } else {
-        this.error = 'Metamask not installed'
-      }
-    },
 
-    hasEthereum() {
-      const { ethereum } = window
-      if (ethereum && ethereum.isMetaMask) {
-        return true
-      } else {
-        return false
-      }
-    },
+        axios
+          .get(`http://169.60.167.178:3001/value/total/${this.address}`)
+          .then((resp) => {
+            this.valuation = resp.data
+            this.loading = false
+          })
 
-    requestScoreFromContract() {
-      this.status = 'loading'
-      // this.tx_status = 'Confirming Transaction';
-      this.tx_status = 'Requesting Score'
-
-      if (!web3.utils.isAddress(this.address)) {
-        this.status = 'errored'
-        this.error = 'Address not valid'
-      } else {
-        web3 = new Web3(window.ethereum)
-        this.address = this.address.toLowerCase()
-
-        try {
-          const chainScoreClientContract = new web3.eth.Contract(
-            ChainScoreClientJSON.abi,
-            '0xA405e8c99E29424f3f320fAED967f2EC8E6700F2'
+        axios
+          .get(
+            `http://169.60.167.178:3001/credit/getAllPositions/${this.address}`
           )
-
-          chainScoreClientContract.methods
-            .requestScore(
-              this.address,
-              '0x6536616537316138336137613436333439313039323037356364326664336538'
-            )
-            .send({
-              from: this.accounts[0],
-            })
-            .on('transactionHash', function (hash) {
-              this.tx_status = 'Score Request sent!'
-              this.tx_id = hash
-              console.log(this.tx_status)
-            })
-            .on('receipt', function (receipt) {
-              // receipt example
-              this.tx_status = 'Waiting for score from oracle...'
-              console.log(receipt)
-              console.log(this.tx_status)
-            })
-            .on('error', (err) => {
-              this.status = 'errored'
-              this.error = err.message
-            })
-
-          this.listenToResp(this.address)
-        } catch (err) {
-          this.status = 'errored'
-          this.error = err
-          console.log(err)
-        }
-      }
-    },
-
-    listenToResp(user) {
-      web3 = new Web3(ws, options)
-
-      const myContract = new web3.eth.Contract(
-        ChainScoreClientJSON.abi,
-        '0xA405e8c99E29424f3f320fAED967f2EC8E6700F2'
-      )
-
-      myContract.events
-        .ScoreRequestFulfilled({
-          // filter: {user: toString()},
-          // fromBlock: 0
-        })
-        .on('data', (event) => {
-          if (user.toLowerCase() === event.returnValues.user.toLowerCase()) {
-            this.debt_score = web3.utils.fromWei(
-              event.returnValues.debt_score + '00'
-            )
-            this.score = web3.utils.fromWei(event.returnValues.score + '00')
-            this.repayment_score = web3.utils.fromWei(
-              event.returnValues.repayment_score + '00'
-            )
-            this.supply_score = web3.utils.fromWei(
-              event.returnValues.supply_score + '00'
-            )
-            this.value_score = web3.utils.fromWei(
-              event.returnValues.value_score + '00'
-            )
-
-            this.status = 'done'
-            this.tx_status = 'not_req'
-
-            console.log(event)
-          }
-        })
-        .on('error', (error) => {
-          console.log(error)
-        })
-    },
-    async requestScore() {
-      this.status = 'loading'
-      if (!web3.utils.isAddress(this.address)) {
-        this.status = 'errored'
-        this.error = 'Address not valid'
-      } else {
-        try {
-          const resp = await axios.get(
-            `http://169.60.167.178:3001/score/${this.address}`
-          )
-          console.log(resp)
-
-          this.score = resp.data.score.toFixed(2)
-          this.supply_score = resp.data.supply_score.toFixed(2)
-          this.value_score = resp.data.value_score.toFixed(2)
-          this.repayment_score = resp.data.repayment_score.toFixed(2)
-          this.debt_score = resp.data.debt_score.toFixed(2)
-
-          this.status = 'done'
-        } catch (err) {
-          this.status = 'errored'
-          this.error = err
-        }
+          .then((resp) => {
+            this.credit = resp.data
+            this.loading = false
+          })
+      } catch (err) {
+        this.loading = false
+        this.error = err
       }
     },
   },
