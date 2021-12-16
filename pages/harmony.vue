@@ -30,6 +30,7 @@
           elevation="0"
           color="yellow darken-1"
           :disabled="status == 'loading'"
+          
           @click="requestScoreFromContract()"
         >
           <v-icon> mdi-flash </v-icon>

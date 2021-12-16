@@ -170,7 +170,7 @@
               color="yellow darken-2"
               class="ma-5"
             >
-              <div class="text-h3">{{ score }}</div>
+              <div class="text-h3">{{ Math.round(score) }}</div>
             </v-progress-circular>
           </div>
         </div>
@@ -186,7 +186,7 @@
               color="yellow darken-2"
               class="ma-5"
             >
-              <div class="text-h4">{{ supply_score }}</div>
+              <div class="text-h4">{{ Math.round(supply_score) }}</div>
             </v-progress-circular>
           </div>
           <div class="ma-5">
@@ -200,7 +200,7 @@
               color="yellow darken-2"
               class="ma-5"
             >
-              <div class="text-h4">{{ value_score }}</div>
+              <div class="text-h4">{{ Math.round(value_score) }}</div>
             </v-progress-circular>
           </div>
           <div class="ma-5">
@@ -214,7 +214,7 @@
               color="yellow darken-2"
               class="ma-5"
             >
-              <div class="text-h4">{{ debt_score }}</div>
+              <div class="text-h4">{{ Math.round(debt_score) }}</div>
             </v-progress-circular>
           </div>
           <div class="ma-5">
@@ -228,14 +228,14 @@
               color="yellow darken-2"
               class="ma-5"
             >
-              <div class="text-h4">{{ repayment_score }}</div>
+              <div class="text-h4">{{ Math.round(repayment_score) }}</div>
             </v-progress-circular>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-else class="d-flex justify-center">
+    <div v-else class="d-flex justify-center my-5">
       <div>
         <v-progress-circular
           size="150"
@@ -244,9 +244,6 @@
           indeterminate
         >
         </v-progress-circular>
-        <div class="text-body-2 text-center my-5" style="color: orange">
-          Requesting
-        </div>
       </div>
       {{ error }}
     </div>
