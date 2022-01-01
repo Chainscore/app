@@ -8,7 +8,7 @@
       color="white"
       class="my-3"
     >
-      <img src="~/assets/logo.png" width="200" />
+      <img src="~/assets/logo.png" width="200" style="margin: 10px" />
 
       <v-spacer></v-spacer>
 

@@ -11,9 +11,9 @@
         style="line-height: 1.2"
       >
         Credit Data for DeFi
-        <div class="text-h3 font font-weight-medium harmony mt-2">
+        <!-- <div class="text-h3 font font-weight-medium harmony mt-2">
           on Harmony Testnet
-        </div>
+        </div> -->
       </div>
     </div>
 
