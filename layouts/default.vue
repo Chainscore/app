@@ -49,13 +49,13 @@
           <v-list-item>
             <v-btn
               class="ma-4"
-              href="https://viperswap.one/#/swap?exactField=input&exactAmount=10&outputCurrency=0x64B60e8C3b8527011B48aD9a19265680FE901CEE"
+              href="https://faucet.chainscore.finance/"
               target="_blank"
               dark
               rounded
               color="yellow darken-4"
               large
-              >Swap $SCORE for $ONE</v-btn
+              >$SCORE Faucet</v-btn
             >
           </v-list-item>
 
