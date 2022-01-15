@@ -2,18 +2,13 @@
   <div>
     <div class="mx-md-15 mx-5 mt-10 pb-10" style="padding-top: 8%">
       <div
-        class="
-          text-h2 text-md-h1
-          font-weight-bold
-          text-center
-          letter-spacing-10
-        "
+        class="text-h2 text-md-h1 font-weight-bold text-center letter-spacing-10"
         style="line-height: 1.2"
       >
         Credit Data for DeFi
-        <!-- <div class="text-h3 font font-weight-medium harmony mt-2">
+        <div class="text-h3 font font-weight-medium harmony mt-2">
           on Harmony Testnet
-        </div> -->
+        </div>
       </div>
     </div>
 
@@ -34,9 +29,9 @@
           <v-icon> mdi-flash </v-icon>
         </v-btn>
         <!-- <div>
-        <div class="text-h4 orange--text" style="line-height: 1.4">We're sorry, Demo is closed for now!</div>
-        <div class="my-5">Join our <a href="https://discord.gg/TaHXKnrgkb">Discord</a> for updates</div>
-        </div> -->
+       <div class="text-h4 orange--text" style="line-height: 1.4">We're sorry, Demo is closed for now!</div>
+       <div class="my-5">Join our <a href="https://discord.gg/TaHXKnrgkb">Discord</a> for updates</div>
+       </div> -->
       </div>
     </div>
 
@@ -90,7 +85,7 @@
           <div class="text-h4 my-5">
             Current Debt
             <div class="text-h3 font-weight-bold">
-              $ {{ credit.current_borrowed.toFixed(2) }}
+              $ {{ Math.abs(credit.current_borrowed.toFixed(2)) }}
             </div>
           </div>
           <div class="d-flex flex-wrap justify-space-around">
@@ -113,14 +108,14 @@
               color="success"
               height="50"
               reverse
-              :value="(credit.total_repaid / credit.total_borrowed) * 100"
+              :value="(credit.current_borrowed / credit.total_borrowed) * 100"
             ></v-progress-linear>
           </div>
 
           <div class="text-h4 my-5 mt-15">
             Current Supplied
             <div class="text-h3 font-weight-bold my-4 mb-10">
-              $ {{ credit.current_supplied.toFixed(2) }}
+              $ {{ Math.abs(credit.current_supplied.toFixed(2)) }}
             </div>
           </div>
           <div class="d-flex flex-wrap justify-space-around">
@@ -142,10 +137,10 @@
               class="mt-2"
               style="border-radius: 100px"
               background-color="yellow darken-1"
-              color="success"
+              color="grey"
               height="50"
               reverse
-              :value="(credit.total_redeemed / credit.total_supplied) * 100"
+              :value="(credit.current_supplied / credit.total_supplied) * 100"
             ></v-progress-linear>
           </div>
         </div>
@@ -245,8 +240,8 @@
         >
         </v-progress-circular>
       </div>
-      {{ error }}
     </div>
+    {{ error }}
   </div>
 </template>
 
@@ -281,41 +276,27 @@ export default {
       this.valuation = null
       this.loading = true
 
-      try {
-        const scoreReq = axios.get(
-          `https://api.node0.chainscore.finance/score/${this.address}`
-        )
+      axios
+        .get(`https://api.node0.chainscore.finance/score/${this.address}`)
+        .then((resp) => {
+          this.score = parseFloat(resp.data.score).toFixed(2) * 100
+          this.supply_score =
+            parseFloat(resp.data.supply_score).toFixed(2) * 100
+          this.value_score = parseFloat(resp.data.value_score).toFixed(2) * 100
+          this.repayment_score =
+            parseFloat(resp.data.repayment_score).toFixed(2) * 100
+          this.debt_score = parseFloat(resp.data.debt_score).toFixed(2) * 100
 
-        const valueReq = axios.get(
-          `https://api.node0.chainscore.finance/value/total/${this.address}`
-        )
+          this.valuation = resp.data.value
+          this.credit = resp.data.credit
 
-        const creditReq = axios.get(
-          `https://api.node0.chainscore.finance/credit/getAllPositions/${this.address}`
-        )
+          this.loading = false
+        })
 
-        axios.all([scoreReq, valueReq, creditReq]).then(
-          axios.spread((...responses) => {
-            this.score = parseFloat(responses[0].data.score).toFixed(2) * 100
-            this.supply_score =
-              parseFloat(responses[0].data.supply_score).toFixed(2) * 100
-            this.value_score =
-              parseFloat(responses[0].data.value_score).toFixed(2) * 100
-            this.repayment_score =
-              parseFloat(responses[0].data.repayment_score).toFixed(2) * 100
-            this.debt_score =
-              parseFloat(responses[0].data.debt_score).toFixed(2) * 100
-
-            this.valuation = responses[1].data
-            this.credit = responses[2].data
-
-            this.loading = false
-          })
-        )
-      } catch (err) {
-        this.loading = false
-        this.error = err
-      }
+        .catch((err) => {
+          this.loading = false
+          this.error = err
+        })
     },
   },
 }
