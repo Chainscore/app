@@ -5,7 +5,7 @@
       fixed
       app
       flat
-      color="white"
+      color="transparent"
       class="my-3"
     >
       <img src="~/assets/logo.png" width="200" style="margin: 10px" />
@@ -75,41 +75,41 @@
     </v-main>
 
     <div class="d-flex flex-column justify-center align-center pb-15 mb-10">
-      <div class="text--secondary">Data provided by</div>
+      <div class="text--secondary my-5">Data provided by</div>
       <div class="d-flex flex-wrap justify-center">
         <v-img
-          class="ma-2"
-          src="https://miro.medium.com/max/955/1*UUtSs0Hfsy3M0GCw9k4UCA.jpeg"
-          style="opacity: 0.4"
-          max-width="200"
+          class="mx-10"
+          src="https://cdn-images-1.medium.com/max/1200/1*uOUrHJwAlNPBiGzl3slkWw.png"
+          style="opacity: 0.7;"
+          max-width="80"
           contain
         ></v-img>
         <v-img
-          class="ma-2"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Chainlink_Logo_Blue.svg/2560px-Chainlink_Logo_Blue.svg.png"
-          style="opacity: 0.4"
-          max-width="200"
+          class="mx-10"
+          src="https://cryptologos.cc/logos/chainlink-link-logo.png?v=002"
+          style="opacity: 0.7"
+          max-width="80"
           contain
         ></v-img>
         <v-img
-          class="ma-2"
-          src="https://moonbeam.network/wp-content/uploads/2021/04/covalent-500.png"
-          style="opacity: 0.4"
-          max-width="200"
+          class="mx-10"
+          src="https://chainstack.com/wp-content/uploads/2020/06/covalent.png"
+          style="opacity: 0.7"
+          max-width="80"
           contain
         ></v-img>
         <v-img
-          class="ma-2"
-          src="https://raw.githubusercontent.com/ajb413/compound-interest-alerts/master/compound-finance-logo.png"
-          style="opacity: 0.4"
-          max-width="200"
+          class="mx-10"
+          src="https://cryptologos.cc/logos/compound-comp-logo.png"
+          style="opacity: 0.7"
+          max-width="80"
           contain
         ></v-img>
         <v-img
-          class="ma-2"
-          src="https://miro.medium.com/max/600/0*DdTT4AumgM-dIVzz"
-          style="opacity: 0.4"
-          max-width="200"
+          class="mx-10"
+          src="https://cryptologos.cc/logos/aave-aave-logo.png"
+          style="opacity: 0.7"
+          max-width="80"
           contain
         ></v-img>
       </div>

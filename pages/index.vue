@@ -5,9 +5,9 @@
         class="text-h2 text-md-h1 font-weight-bold text-center letter-spacing-10"
         style="line-height: 1.2"
       >
-        Credit Data for DeFi
-        <div class="text-h3 font font-weight-medium harmony mt-2">
-          on Harmony Testnet
+        
+        <div class="text-h1 font font-weight-medium harmony mt-2">
+          Credit Data for DeFi
         </div>
       </div>
     </div>
@@ -304,7 +304,7 @@ export default {
 
 <style lang="css">
 .harmony {
-  background: -webkit-linear-gradient(right, #1cd8d2, #93edc7);
+  background: -webkit-linear-gradient(right, #c5d81c, #ede793);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
