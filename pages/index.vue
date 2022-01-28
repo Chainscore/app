@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="mx-md-15 mx-5 mt-15 pt-15">
+    <div class="mx-md-15 mx-5 mt-15 pt-md-15 pt-5">
       <div
-        class="text-h2 text-md-h1 font-weight-bold text-center letter-spacing-10"
+        class=""
         style="line-height: 1.2"
       >
         
-        <div class="text-md-h1 text-h2 font font-weight-medium harmony mt-2">
+        <div class="text-md-h1 text-h3 font font-weight-medium harmony letter-spacing-10 text-center">
           Credit Analytics for DeFi
         </div>
         
@@ -32,7 +32,7 @@
 
         <v-btn
           dark
-          class="mx-4"
+          class="ml-4"
           fab
           elevation="0"
           color="yellow darken-1"
@@ -190,7 +190,7 @@
         <div class="d-flex flex-wrap justify-space-around text-center">
           <div class="ma-5">
             <div class="text-md-h5 text-h6">Supply Score</div>
-
+            <div class="text-body-2">Value deposited/supplied to DeFi protocols</div>
             <v-progress-circular
               :rotate="90"
               :size="250"
@@ -204,7 +204,7 @@
           </div>
           <div class="ma-5">
             <div class="text-md-h5 text-h6">Value Score</div>
-
+            <div class="text-body-2">Based on Account Valuation from assets holding (ERC20)</div>
             <v-progress-circular
               :rotate="90"
               :size="250"
@@ -218,7 +218,7 @@
           </div>
           <div class="ma-5">
             <div class="text-md-h5 text-h6">Debt Score</div>
-
+            <div class="text-body-2">Depends of debt history or existing debts</div>
             <v-progress-circular
               :rotate="90"
               :size="250"
@@ -232,7 +232,7 @@
           </div>
           <div class="ma-5">
             <div class="text-md-h5 text-h6">Repayment Score</div>
-
+            <div class="text-body-2">Depends of debt repayments</div>
             <v-progress-circular
               :rotate="90"
               :size="250"

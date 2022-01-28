@@ -1,30 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-      flat
-      color="transparent"
-      class="my-3"
-    >
-      <img src="~/assets/logo.png" width="200" style="margin: 10px" />
-
-      <v-spacer></v-spacer>
-
-
-          <v-btn
-            text
-            href="https://docs.chainscore.finance"
-            target="_blank"
-            rounded
-            large
-            >docs</v-btn
-          >
-
-        <v-app-bar-nav-icon class="mr-5" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-    </v-app-bar>
+    
 
     <v-navigation-drawer v-model="drawer" absolute bottom temporary right width="330" color="yellow">
       <v-list nav dense>
@@ -74,16 +50,42 @@
       </v-list>
     </v-navigation-drawer>
 
+    <v-app-bar
+      :clipped-left="clipped"
+      fixed
+      app
+      flat
+      class="py-2"
+      color="transparent"
+      
+    >
+      <img src="~/assets/logo.png" width="200"  />
+
+      <v-spacer></v-spacer>
+
+          <a
+            text
+            href="https://docs.chainscore.finance"
+            target="_blank"
+            class="yellow--text text-button my-2"
+            
+            >docs</a
+          >
+
+        <v-app-bar-nav-icon class="mr-5" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+    </v-app-bar>
+
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
 
-    <!-- <div class="d-flex flex-column justify-center align-center pb-15 mb-10">
-      <div class="text--secondary my-5">Data provided by</div>
+    <div class="d-flex flex-column justify-center align-center pb-15 mb-10">
+      <div class="text--secondary my-5">Supported Protocols</div>
       <div class="d-flex mt-5 flex-wrap justify-center">
-        <v-img
+        <!-- <v-img
           class="mx-10 my-5"
           src="https://cdn-images-1.medium.com/max/1200/1*uOUrHJwAlNPBiGzl3slkWw.png"
           style="opacity: 0.7;"
@@ -103,24 +105,24 @@
           style="opacity: 0.7"
           max-width="80"
           contain
-        ></v-img>
+        ></v-img> -->
         <v-img
-          class="mx-10 my-5"
+          class="mx-10 "
           src="https://cryptologos.cc/logos/compound-comp-logo.png"
           style="opacity: 0.7"
           max-width="80"
           contain
         ></v-img>
         <v-img
-          class="mx-10 my-5"
+          class="mx-10 "
           src="https://cryptologos.cc/logos/aave-aave-logo.png"
           style="opacity: 0.7"
           max-width="80"
           contain
         ></v-img>
       </div>
-    </div> -->
-    <v-footer :absolute="!fixed" app color="yellow darken-1 pa-1">
+    </div>
+    <v-footer app color="yellow darken-1 pa-1">
       <span>&copy; {{ new Date().getFullYear() }}</span>
       <v-spacer></v-spacer>
       <div class="mr-5">
@@ -161,18 +163,6 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
-        },
-      ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
