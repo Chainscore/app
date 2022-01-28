@@ -48,8 +48,8 @@
       </div>
     </div>
 
-    <!-- <div v-if="!loading" class="pb-10"> -->
-    <div v-if="true" class="pb-10">
+    <div v-if="!loading" class="pb-10">
+    <!-- <div v-if="true" class="pb-10"> -->
 
       <!-- Valuation -->
       <div v-if="valuation">

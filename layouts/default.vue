@@ -80,7 +80,7 @@
       </v-container>
     </v-main>
 
-    <div class="d-flex flex-column justify-center align-center pb-15 mb-10">
+    <!-- <div class="d-flex flex-column justify-center align-center pb-15 mb-10">
       <div class="text--secondary my-5">Data provided by</div>
       <div class="d-flex mt-5 flex-wrap justify-center">
         <v-img
@@ -119,7 +119,7 @@
           contain
         ></v-img>
       </div>
-    </div>
+    </div> -->
     <v-footer :absolute="!fixed" app color="yellow darken-1 pa-1">
       <span>&copy; {{ new Date().getFullYear() }}</span>
       <v-spacer></v-spacer>
