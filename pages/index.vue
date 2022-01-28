@@ -7,7 +7,7 @@
       >
         
         <div class="text-md-h1 text-h2 font font-weight-medium harmony mt-2">
-          Credit Risk Data for DeFi
+          Credit Analytics for DeFi
         </div>
         
         </div>
