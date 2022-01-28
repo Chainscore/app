@@ -1,18 +1,31 @@
 <template>
   <div>
-    <div class="mx-md-15 mx-5 mt-10 pb-10" style="padding-top: 8%">
+    <div class="mx-md-15 mx-5 mt-15 pt-15">
       <div
         class="text-h2 text-md-h1 font-weight-bold text-center letter-spacing-10"
         style="line-height: 1.2"
       >
         
-        <div class="text-h1 font font-weight-medium harmony mt-2">
-          Credit Data for DeFi
+        <div class="text-md-h1 text-h2 font font-weight-medium harmony mt-2">
+          Credit Risk Data for DeFi
+        </div>
+        
+        </div>
+        <div class="mt-10">
+        <div class="text--disabled text-center">
+          ✔️ Data supported from Ethereum Mainnet
+        </div>
+        <div class="text--disabled text-center">
+          ✔️ ERC20 Assets and NFTs for valuation
+        </div>
+        <div class="text--disabled text-center">
+          ✔️ Credit History (Lending/Borrowing) tracked from Aave V2 and
+          Compound
         </div>
       </div>
     </div>
 
-    <div class="ma-md-15 py-5">
+    <div class="ma-md-15 pt-md-0 pt-10 px-md-15">
       <div class="d-flex justify-center align-bottom text-center mx-5 mx-md-15">
         <v-text-field v-model="address" label="Address (0x)" outlined rounded>
         </v-text-field>
@@ -35,22 +48,27 @@
       </div>
     </div>
 
-    <div v-if="!loading" class="pb-10">
+    <!-- <div v-if="!loading" class="pb-10"> -->
+    <div v-if="true" class="pb-10">
+
       <!-- Valuation -->
       <div v-if="valuation">
-        <div class="text-h4 font-weight-bold mx-15 px-10 mb-10">
-          Total Valuation
-          <div class="text-h3 my-4">$ {{ valuation.total.toFixed(2) }}</div>
+
+        <div class="text-md-h3 text-h4 harmony font-weight-bold mx-md-15 mx-10 px-md-10 mb-10">Valuation</div>
+
+        <div class="text-md-h4 text-h5 mx-md-15 mx-10 px-md-10 mb-10">
+          Total
+          <div class="text-md-h3 text-h4 my-4">$ {{ valuation.total.toFixed(2) }}</div>
         </div>
 
         <!-- <div>Assets</div> -->
 
-        <v-slide-group multiple show-arrows class="mx-md-15">
+        <v-slide-group multiple show-arrows>
           <v-slide-item
             v-for="asset in valuation.items"
             :key="asset.contract_address"
           >
-            <v-card class="ma-5" flat>
+            <v-card class="ma-md-5 pa-5 mr-5" flat>
               <div class="d-md-flex">
                 <v-img :src="asset.logo_url" width="120px" contain></v-img>
                 <div>
@@ -78,67 +96,67 @@
       </div>
 
       <!-- Credit Data -->
-      <div v-if="credit" class="mx-md-15 mx-5 px-10 mb-5 mt-15">
-        <div class="text-h4 font-weight-bold pt-10">Credit Data</div>
+      <div v-if="credit" class="mx-md-15 mx-md-5 px-10 mb-5 mt-15">
+        <div class="text-md-h3 text-h4 harmony font-weight-bold pt-10">Credit Data</div>
 
-        <div class="mt-15 justify-space-around">
-          <div class="text-h4 my-5">
+        <div class="mt-md-15 mt-10 justify-space-around">
+          <div class="text-md-h4 text-h5 my-5">
             Current Debt
-            <div class="text-h3 font-weight-bold">
+            <div class="text-md-h3 text-h4 font-weight-bold">
               $ {{ Math.abs(credit.current_borrowed.toFixed(2)) }}
             </div>
           </div>
           <div class="d-flex flex-wrap justify-space-around">
-            <div class="text-h5 py-10">
+            <div class="text-h5 py-md-10 py-5 text-md-center">
               Total Debt History
-              <div class="text-h4">
+              <div class="text-md-h4 text-h5">
                 $ {{ credit.total_borrowed.toFixed(2) }}
               </div>
             </div>
 
-            <div class="text-h5 py-10">
+            <div class="text-h5 py-10 text-md-center">
               Total Repaid History
-              <div class="text-h4">$ {{ credit.total_repaid.toFixed(2) }}</div>
+              <div class="text-md-h4 text-h5">$ {{ credit.total_repaid.toFixed(2) }}</div>
             </div>
 
             <v-progress-linear
               class="mt-2"
-              style="border-radius: 100px"
+              style="border-radius: 10px"
               background-color="yellow darken-1"
               color="success"
-              height="50"
+              height="40"
               reverse
               :value="(credit.current_borrowed / credit.total_borrowed) * 100"
             ></v-progress-linear>
           </div>
 
-          <div class="text-h4 my-5 mt-15">
+          <div class="text-md-h4 text-h5 my-5 mt-15">
             Current Supplied
-            <div class="text-h3 font-weight-bold my-4 mb-10">
+            <div class="text-md-h3 text-h4 font-weight-bold my-4 mb-10">
               $ {{ Math.abs(credit.current_supplied.toFixed(2)) }}
             </div>
           </div>
           <div class="d-flex flex-wrap justify-space-around">
             <div class="text-h5 py-10">
               Total Supplied History
-              <div class="text-h4">
+              <div class="text-md-h4 text-h5">
                 $ {{ credit.total_supplied.toFixed(2) }}
               </div>
             </div>
 
             <div class="text-h5 py-10">
               Total Redeemed History
-              <div class="text-h4">
+              <div class="text-md-h4 text-h5">
                 $ {{ credit.total_redeemed.toFixed(2) }}
               </div>
             </div>
 
             <v-progress-linear
               class="mt-2"
-              style="border-radius: 100px"
+              style="border-radius: 10px"
               background-color="yellow darken-1"
               color="grey"
-              height="50"
+              height="40"
               reverse
               :value="(credit.current_supplied / credit.total_supplied) * 100"
             ></v-progress-linear>
@@ -151,11 +169,11 @@
       </div>
 
       <!-- Scores -->
-      <div v-if="score != null" class="mx-md-15 mx-5 px-10 mb-5 mt-15">
-        <div class="text-h4 font-weight-bold pt-10">Credit Score</div>
+      <div v-if="score != null" class="mx-md-15 mx-5 px-md-10 px-5 mb-5 mt-15">
+        <div class="text-md-h3 text-h4 harmony font-weight-bold pt-10">Credit Score</div>
         <div class="d-flex text-center justify-center ma-5">
           <div>
-            <div class="text-h4">Overall Score</div>
+            <div class="text-md-h4 text-h5 mx-15">Overall Score</div>
 
             <v-progress-circular
               :rotate="90"
@@ -171,7 +189,7 @@
         </div>
         <div class="d-flex flex-wrap justify-space-around text-center">
           <div class="ma-5">
-            <div class="text-h5">Supply Score</div>
+            <div class="text-md-h5 text-h6">Supply Score</div>
 
             <v-progress-circular
               :rotate="90"
@@ -185,7 +203,7 @@
             </v-progress-circular>
           </div>
           <div class="ma-5">
-            <div class="text-h5">Value Score</div>
+            <div class="text-md-h5 text-h6">Value Score</div>
 
             <v-progress-circular
               :rotate="90"
@@ -199,7 +217,7 @@
             </v-progress-circular>
           </div>
           <div class="ma-5">
-            <div class="text-h5">Debt Score</div>
+            <div class="text-md-h5 text-h6">Debt Score</div>
 
             <v-progress-circular
               :rotate="90"
@@ -213,7 +231,7 @@
             </v-progress-circular>
           </div>
           <div class="ma-5">
-            <div class="text-h5">Repayment Score</div>
+            <div class="text-md-h5 text-h6">Repayment Score</div>
 
             <v-progress-circular
               :rotate="90"

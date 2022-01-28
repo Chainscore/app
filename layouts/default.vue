@@ -64,6 +64,12 @@
         >Try on Harmony Testnet</v-btn
       >
           </v-list-item>
+
+          <v-list-item>
+            <v-btn class="ma-4" to="/" light large rounded color="white"
+        >Try on ChainScore Network</v-btn
+      >
+          </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -76,37 +82,37 @@
 
     <div class="d-flex flex-column justify-center align-center pb-15 mb-10">
       <div class="text--secondary my-5">Data provided by</div>
-      <div class="d-flex flex-wrap justify-center">
+      <div class="d-flex mt-5 flex-wrap justify-center">
         <v-img
-          class="mx-10"
+          class="mx-10 my-5"
           src="https://cdn-images-1.medium.com/max/1200/1*uOUrHJwAlNPBiGzl3slkWw.png"
           style="opacity: 0.7;"
           max-width="80"
           contain
         ></v-img>
         <v-img
-          class="mx-10"
+          class="mx-10 my-5"
           src="https://cryptologos.cc/logos/chainlink-link-logo.png?v=002"
           style="opacity: 0.7"
           max-width="80"
           contain
         ></v-img>
         <v-img
-          class="mx-10"
+          class="mx-10 my-5"
           src="https://chainstack.com/wp-content/uploads/2020/06/covalent.png"
           style="opacity: 0.7"
           max-width="80"
           contain
         ></v-img>
         <v-img
-          class="mx-10"
+          class="mx-10 my-5"
           src="https://cryptologos.cc/logos/compound-comp-logo.png"
           style="opacity: 0.7"
           max-width="80"
           contain
         ></v-img>
         <v-img
-          class="mx-10"
+          class="mx-10 my-5"
           src="https://cryptologos.cc/logos/aave-aave-logo.png"
           style="opacity: 0.7"
           max-width="80"

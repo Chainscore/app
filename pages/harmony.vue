@@ -1,21 +1,27 @@
 <template>
   <div>
-    <div class="mx-15 mt-10" style="padding-top: 8%">
+    <div class="mx-md-15 mx-5 mt-15 pt-15" >
       <div
-        class="
-          text-h2 text-md-h1
-          font-weight-bold
-          text-center
-          letter-spacing-10
-        "
-        style="line-height: 1.2"
+        class="text-h2 text-md-h1 font-weight-bold text-center letter-spacing-10"
       >
         ChainScore in now live
-        <div class="text-h3 font-weight-medium harmony">on Harmony Testnet</div>
+        <div class="text-md-h3 text-h4 mt-5 font-weight-medium harmony">on Harmony Testnet</div>
+      </div>
+      <div class="mt-10">
+        <div class="text--disabled text-center">
+          ✔️ Real-time data from Ethereum Mainnet
+        </div>
+        <div class="text--disabled text-center">
+          ✔️ Supporting ERC20 Assets and NFTs for valuation
+        </div>
+        <div class="text--disabled text-center">
+          ✔️ Credit History (Lending/Borrowing) tracked from Aave V2 and
+          Compound
+        </div>
       </div>
     </div>
 
-    <div class="ma-md-15 py-5">
+    <div class="ma-md-15 mt-10 px-md-15">
       <div
         v-if="accounts.length > 0"
         class="d-flex justify-center align-bottom text-center mx-5 mx-md-15"
@@ -30,7 +36,6 @@
           elevation="0"
           color="yellow darken-1"
           :disabled="status == 'loading'"
-          
           @click="requestScoreFromContract()"
         >
           <v-icon> mdi-flash </v-icon>
@@ -45,6 +50,7 @@
         <v-btn
           class="px-10"
           rounded
+          light
           x-large
           color="yellow darken-1"
           @click="connect()"
@@ -63,81 +69,89 @@
     </div>
 
     <div v-if="status == 'done'" class="pb-10" style="padding: 0% 14%">
-      <div class="d-flex align-center mt-15 my-10 justify-space-around">
-        <div class="text-h4 font-weight-bold">Overall Score</div>
-        <div class="text-h2 mx-15 font-weight-bold">
-          {{ score.slice(0, 8) }}
+    <!-- <div v-if="score != null" class="mx-md-15 mx-5 px-10 mb-5 mt-15"> -->
+    <!-- <div v-if="true" class="mx-md-15 mx-5 px-10 mb-5 mt-15"> -->
+
+        <div class="d-flex text-center justify-center ma-5">
+          <div>
+            <div class="text-h4">Overall Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="400"
+              :width="80"
+              :value="score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h3">{{ Math.round(score) }}</div>
+            </v-progress-circular>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap justify-space-around text-center">
+          <div class="ma-5">
+            <div class="text-h5">Supply Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="supply_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ Math.round(supply_score) }}</div>
+            </v-progress-circular>
+          </div>
+          <div class="ma-5">
+            <div class="text-h5">Value Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="value_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ Math.round(value_score) }}</div>
+            </v-progress-circular>
+          </div>
+          <div class="ma-5">
+            <div class="text-h5">Debt Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="debt_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ Math.round(debt_score) }}</div>
+            </v-progress-circular>
+          </div>
+          <div class="ma-5">
+            <div class="text-h5">Repayment Score</div>
+
+            <v-progress-circular
+              :rotate="90"
+              :size="250"
+              :width="50"
+              :value="repayment_score"
+              color="yellow darken-2"
+              class="ma-5"
+            >
+              <div class="text-h4">{{ Math.round(repayment_score) }}</div>
+            </v-progress-circular>
+          </div>
         </div>
       </div>
 
-      <v-progress-linear
-        height="20"
-        :value="parseInt(score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="
-          d-flex
-          align-center
-          mt-15
-          mb-10
-          justify-space-around
-          text--secondary
-        "
-      >
-        <div class="text-h5">Supply Score</div>
-        <div class="text-h4 mx-15">{{ supply_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(supply_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="d-flex align-center my-10 justify-space-around text--secondary"
-      >
-        <div class="text-h5">Valuation Score</div>
-        <div class="text-h4 mx-15">{{ value_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(value_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="d-flex align-center my-10 justify-space-around text--secondary"
-      >
-        <div class="text-h5">Debt Score</div>
-        <div class="text-h4 mx-15">{{ debt_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(debt_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-
-      <div
-        class="d-flex align-center my-10 justify-space-around text--secondary"
-      >
-        <div class="text-h5">Repayment Score</div>
-        <div class="text-h4 mx-15">{{ repayment_score.slice(0, 8) }}</div>
-      </div>
-
-      <v-progress-linear
-        height="10"
-        :value="parseInt(repayment_score)"
-        color="yellow darken-1"
-      ></v-progress-linear>
-    </div>
-
-    <div v-else-if="status == 'loading'" class="d-flex justify-center">
+    <div v-else-if="status == 'loading'">
+    <!-- <div v-else-if="true"> -->
       <div>
+        <div class="d-flex justify-center">
         <v-progress-circular
           size="150"
           width="10"
@@ -145,12 +159,13 @@
           indeterminate
         >
         </v-progress-circular>
+        </div>
         <div class="text-body-2 text-center my-5" style="color: orange">
           {{ tx_status }}
         </div>
         {{ tx_id }}
       </div>
-    </div>    
+    </div>
   </div>
 </template>
 
@@ -254,41 +269,43 @@ export default {
         web3 = new Web3(window.ethereum)
         this.address = this.address.toLowerCase()
 
-        try {
+        // try {
           const chainScoreClientContract = new web3.eth.Contract(
             ChainScoreClientJSON.abi,
             '0xffC4FeD20b741C7C660aDe359D636AE8A4f307D6'
           )
 
           chainScoreClientContract.methods
-            .requestScore(
-              this.address
-            )
+            .requestScore(this.address)
             .send({
               from: this.accounts[0],
             })
-            .on('transactionHash', function (hash) {
-              this.tx_status = 'Score Request sent!'
-              this.tx_id = hash
-              console.log(this.tx_status)
+            .then(resp => {
+              console.log(resp);
+              this.tx_status = "Request sent! Waiting for score from oracle...";
             })
-            .on('receipt', function (receipt) {
-              // receipt example
-              this.tx_status = 'Waiting for score from oracle...'
-              console.log(receipt)
-              console.log(this.tx_status)
-            })
-            .on('error', (err) => {
-              this.status = 'errored'
-              this.error = err.message
-            })
+            // .on('transactionHash', function (hash) {
+            //   this.tx_status = 'Score Request sent!'
+            //   this.tx_id = hash
+            //   console.log(this.tx_status)
+            // })
+            // .on('receipt', function (receipt) {
+            //   // receipt example
+            //   this.tx_status = 'Waiting for score from oracle...'
+            //   console.log(receipt)
+            //   console.log(this.tx_status)
+            // })
+            // .on('error', (err) => {
+            //   this.status = 'errored'
+            //   this.error = err.message
+            // })
 
           this.listenToResp(this.address)
-        } catch (err) {
-          this.status = 'errored'
-          this.error = err
-          console.log(err)
-        }
+        // } catch (err) {
+        //   this.status = 'errored'
+        //   this.error = err
+        //   console.log(err)
+        // }
       }
     },
 
