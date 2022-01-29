@@ -295,7 +295,7 @@ export default {
       this.loading = true
 
       axios
-        .get(`https://api.node0.chainscore.finance/score/${this.address}`)
+        .get(`https://api.node0.chainscore.finance/score/full/${this.address}`)
         .then((resp) => {
           this.score = parseFloat(resp.data.score).toFixed(2) * 100
           this.supply_score =
